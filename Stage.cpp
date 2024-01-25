@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include "Engine/Model.h"
 #include "Engine/Camera.h"
+#include "Engine/CsvReader.h"
 
 namespace
 {
@@ -28,7 +29,10 @@ namespace
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage")
 {
-
+	CsvReader csv;
+	csv.Load("map.csv");
+	int w = csv.GetWidth();
+	int h = csv.GetHeight();
 
 	for (int i = 0; i < STAGE_Y; i++)
 	{
@@ -39,7 +43,7 @@ Stage::Stage(GameObject* parent)
 	{
 		for (int i = 0; i < STAGE_X; i++)
 		{
-			stageData_[j][i] = sArray[j][i];
+			stageData_[j][i] = csv.GetValue(i, j);
 		}
 	}
 }

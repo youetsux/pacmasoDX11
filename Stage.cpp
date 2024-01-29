@@ -31,14 +31,17 @@ Stage::Stage(GameObject* parent)
 {
 	CsvReader csv;
 	csv.Load("map.csv");
-	int w = csv.GetWidth();
-	int h = csv.GetHeight();
+
+	int STAGE_X = csv.GetWidth();
+	int STAGE_Y = csv.GetHeight();
 
 	for (int i = 0; i < STAGE_Y; i++)
 	{
-		vector<int> sdata(STAGE_X,0);//15ŒÂ‚Ì”z—ñ‚ğ0‚Å‰Šú‰»
+		vector<int> sdata(STAGE_X, 0);//15ŒÂ‚Ì”z—ñ‚ğ0‚Å‰Šú‰»
 		stageData_.push_back(sdata);
 	}
+	//vector<vector<int>> stageData_(STAGE_Y, vector<int>(STAGE_X, 0));
+
 	for (int j = 0; j < STAGE_Y; j++)
 	{
 		for (int i = 0; i < STAGE_X; i++)
@@ -54,7 +57,7 @@ void Stage::Initialize()
 	assert(hFloor_ >= 0);
 	hBlock_ = Model::Load("wall.fbx");
 	assert(hBlock_ >= 0);
-	Camera::SetPosition({ 6.5, 15, -3 });
+	Camera::SetPosition({ 6.5, 10, -3 });
 	Camera::SetTarget({ 6.5, 0, 5.5 });
 
 }
@@ -71,7 +74,7 @@ void Stage::Draw()
 	
 	for (int z = 0; z < 15; z++) {
 		for (int x = 0; x < 15; x++) {
-			floorTrans.position_ = { (float)x, 0, (float)z };
+			floorTrans.position_ = { (float)x, 0, (float)(14 - z) };
 			//if (x == 0 || z == 0 || x == 14 || z == 14) {
 			//	Model::SetTransform(hBlock_, floorTrans);
 			//	Model::Draw(hBlock_);

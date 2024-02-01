@@ -2,6 +2,7 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Debug.h"
+#include "Stage.h"
 
 namespace {
 	const float PLAYER_MOVE_SPEED{ 1.0f };
@@ -9,7 +10,8 @@ namespace {
 
 
 Player::Player(GameObject* parent)
-	:GameObject(parent, "Player"), hModel_(-1), speed_(PLAYER_MOVE_SPEED)
+	:GameObject(parent, "Player"), 
+	hModel_(-1), speed_(PLAYER_MOVE_SPEED), pStage_(nullptr)
 {
 }
 
@@ -19,7 +21,8 @@ void Player::Initialize()
 	assert(hModel_ >= 0);
 	transform_.position_.x = 0.5;
 	transform_.position_.z = 1.5;
-	//map[13][1]が、（map[y][x]の場合）初期位置
+	pStage_ = (Stage *)FindObject("Stage");
+
 	
 }
 
@@ -34,22 +37,22 @@ void Player::Update()
 	XMVECTOR vFront = { 0, 0, 1, 0 };
 	XMVECTOR move{ 0, 0, 0, 0 };
 
-	if (Input::IsKeyDown(DIK_UP))
+	if (Input::IsKey(DIK_UP))
 	{
 		move = XMVECTOR{ 0, 0, 1, 0 };
 		//moveDir = Dir::UP;
 	}
-	if (Input::IsKeyDown(DIK_LEFT))
+	if (Input::IsKey(DIK_LEFT))
 	{
 		move = XMVECTOR{ -1, 0, 0, 0 };
 		//moveDir = Dir::LEFT;
 	}
-	if (Input::IsKeyDown(DIK_DOWN))
+	if (Input::IsKey(DIK_DOWN))
 	{
 		move = XMVECTOR{ 0, 0, -1, 0 };
 		//moveDir = Dir::DOWN;
 	}
-	if (Input::IsKeyDown(DIK_RIGHT))
+	if (Input::IsKey(DIK_RIGHT))
 	{
 		move = XMVECTOR{ 1, 0, 0, 0 };
 		//moveDir = Dir::RIGHT;
@@ -57,11 +60,35 @@ void Player::Update()
 
 
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
-	pos = pos + speed_ * move;
-	Debug::Log("(X, Z)=");
+	XMVECTOR posTmp = XMVectorZero(); //ゼロベクトルで初期化
+	posTmp = pos + speed_ * move;
+
+	int tx, ty;
+	tx = (int)(XMVectorGetX(posTmp) + 1.0f);
+	ty = pStage_->GetStageWidth() - (int)(XMVectorGetZ(posTmp) + 1.0f);
+	if (!(pStage_->IsWall(tx, ty)))
+	{
+		pos = posTmp;
+	}
+
+	//posTmp.x, posTmp.z => int tx,ty :配列のインデックス
+	//仮にmapの配列をmap[][]とする
+	//移動先がフロア(STAGE_OBJ::FLOOR => 0)だったら動く
+	//if (map[ty][tx] == STAGE_OBJ::FLOOR) {
+	//	pos = posTemp;
+	//}
+	Debug::Log("(X,Z)=");
 	Debug::Log(XMVectorGetX(pos));
 	Debug::Log(",");
 	Debug::Log(XMVectorGetZ(pos),true);
+
+	Debug::Log("(iX,iZ)=");
+	Debug::Log(tx);
+	Debug::Log(",");
+	Debug::Log(ty);
+	Debug::Log(" : ");
+	Debug::Log(pStage_->IsWall(tx,ty), true);
+
 
 	if (!XMVector3Equal(move, XMVectorZero())) {
 		XMStoreFloat3(&(transform_.position_), pos);

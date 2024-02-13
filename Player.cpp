@@ -58,7 +58,6 @@ void Player::Update()
 		moveDir = Dir::RIGHT;
 	}
 
-
 	XMVECTOR pos = XMLoadFloat3(&(transform_.position_));
 	XMVECTOR posTmp = XMVectorZero(); //ゼロベクトルで初期化
 	posTmp = pos + speed_ * move;
@@ -99,26 +98,6 @@ void Player::Update()
 		pos = posTmp;
 	}
 
-	//posTmp.x, posTmp.z => int tx,ty :配列のインデックス
-	//仮にmapの配列をmap[][]とする
-	//移動先がフロア(STAGE_OBJ::FLOOR => 0)だったら動く
-	//if (map[ty][tx] == STAGE_OBJ::FLOOR) {
-	//	pos = posTemp;
-	//}
-	//Debug::Log("(X,Z)=");
-	//Debug::Log(XMVectorGetX(pos));
-	//Debug::Log(",");
-	//Debug::Log(XMVectorGetZ(pos),true);
-
-	Debug::Log("(iX,iZ)=");
-	Debug::Log(tx);
-	Debug::Log(",");
-	Debug::Log(ty);
-	Debug::Log(" : ");
-	Debug::Log(pStage_->IsWall(tx,ty), true);
-
-	//static float angle = 0.0f;
-	//angle += 0.01f;
 	if (!XMVector3Equal(move, XMVectorZero())) {
 		XMStoreFloat3(&(transform_.position_), pos);
 
@@ -126,34 +105,6 @@ void Player::Update()
 		retAngle = atan2(XMVectorGetX(move), XMVectorGetZ(move));
 		transform_.rotate_.y = XMConvertToDegrees(retAngle);
 	}
-
-	//	//XMMATRIX rot = XMMatrixRotationY(angle);
-	//	//XMVECTOR modVec = XMVector3Transform(vFront, rot);
-	//	////XMVECTOR vdot = XMVector3Dot(vFront, move);
-	//	////assert(XMVectorGetX(vdot) <= 1 && XMVectorGetX(vdot) >= -1);
-	//	////float angle = acos(XMVectorGetX(vdot));
-	//	//Debug::Log(XMVectorGetX(modVec));
-	//	//Debug::Log(", ");
-	//	//Debug::Log(XMVectorGetZ(modVec),true);
-	//	////XMVECTOR vCross = XMVector3Cross(vFront, move);
-	//	////if (XMVectorGetY(vCross) < 0)
-	//	////{
-	//	////	angle *= -1;
-	//	////}
-	//	//float retAngle = atan2(XMVectorGetZ(modVec), XMVectorGetX(modVec));
-	//	//transform_.rotate_.y = XMConvertToDegrees(angle);
-	//}
-	//XMMATRIX rot = XMMatrixRotationY(angle);
-	//XMVECTOR modVec = XMVector3Transform(vFront, rot);
-
-	////Debug::Log(XMVectorGetX(modVec));
-	////Debug::Log(", ");
-	////Debug::Log(XMVectorGetZ(modVec), true);
-
-
-
-	//float rotAngle[5]{ 0, -90, 180, 90, 180 };
-	//transform_.rotate_.y = rotAngle[moveDir];
 
 }
 

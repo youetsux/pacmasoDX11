@@ -29,6 +29,11 @@ namespace
 bool Stage::IsWall(int _x, int _y)
 {
 	//assert();//_x,_y no hani check
+	assert(_x < stageWidth_);
+	assert(_y < stageHeight_);
+	assert(_y >= 0);
+	assert(_x >= 0);
+
 	if (stageData_[_y][_x] == STAGE_OBJ::WALL)
 		return true;
 	else
@@ -68,8 +73,8 @@ void Stage::Initialize()
 	assert(hFloor_ >= 0);
 	hBlock_ = Model::Load("wall.fbx");
 	assert(hBlock_ >= 0);
-	Camera::SetPosition({ 0, 20, -20 });
-	Camera::SetTarget({ 0, 0, 0});
+	Camera::SetPosition({ 7, 10, -10 });
+	Camera::SetTarget({ 7, 0, 7});
 }
 
 void Stage::Update()

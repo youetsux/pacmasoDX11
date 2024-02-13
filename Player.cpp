@@ -70,30 +70,28 @@ void Player::Update()
 	switch (moveDir)
 	{
 	case UP:
-		tx = (int)(trec.centerx + 0.5);
-		ty = pStage_->GetStageWidth() - (int)(trec.top + 0.5);
+		tx = (int)(trec.centerx + 1);
+		ty = pStage_->GetStageHeight() - (int)(trec.top)  - 1;
 		break;
 	case DOWN:
-		tx = (int)(trec.centerx + 0.5);
-		ty = pStage_->GetStageWidth() - (int)(trec.bottom + 0.5);
+		tx = (int)(trec.centerx + 1);
+		ty = pStage_->GetStageHeight() - (int)(trec.bottom) - 1;
 		break;
 	case LEFT:
-		tx = (int)(trec.left + 0.5);
-		ty = pStage_->GetStageWidth() - (int)(trec.top + 0.5);
+		tx = (int)(trec.left + 1);
+		ty = pStage_->GetStageHeight() - (int)(trec.centery) - 1;
 		break;
 	case RIGHT:
-		tx = (int)(trec.right + 0.5);
-		ty = pStage_->GetStageWidth() - (int)(trec.top + 0.5);
+		tx = (int)(trec.right + 1) ;
+		ty = pStage_->GetStageHeight() - (int)(trec.centery) -1 ;
 		break;
 	case NONE:
-		tx = (int)(trec.centerx + 0.5);
-		ty = pStage_->GetStageWidth() - (int)(trec.centery + 0.5); 
+		tx = (int)(trec.centerx + 1);
+		ty = pStage_->GetStageHeight() - (int)(trec.centery) -1;
 		break;
 	defaulet:
 		break;
 	}
-	//tx = (int)(XMVectorGetX(posTmp) + 1.0f);
-	//ty = pStage_->GetStageWidth() - (int)(XMVectorGetZ(posTmp) + 1.0f);
 	
 	
 	if (!(pStage_->IsWall(tx, ty)))
@@ -119,36 +117,40 @@ void Player::Update()
 	Debug::Log(" : ");
 	Debug::Log(pStage_->IsWall(tx,ty), true);
 
-	static float angle = 0.0f;
-	angle += 0.01f;
+	//static float angle = 0.0f;
+	//angle += 0.01f;
 	if (!XMVector3Equal(move, XMVectorZero())) {
 		XMStoreFloat3(&(transform_.position_), pos);
 
-		//XMMATRIX rot = XMMatrixRotationY(angle);
-		//XMVECTOR modVec = XMVector3Transform(vFront, rot);
-		////XMVECTOR vdot = XMVector3Dot(vFront, move);
-		////assert(XMVectorGetX(vdot) <= 1 && XMVectorGetX(vdot) >= -1);
-		////float angle = acos(XMVectorGetX(vdot));
-		//Debug::Log(XMVectorGetX(modVec));
-		//Debug::Log(", ");
-		//Debug::Log(XMVectorGetZ(modVec),true);
-		////XMVECTOR vCross = XMVector3Cross(vFront, move);
-		////if (XMVectorGetY(vCross) < 0)
-		////{
-		////	angle *= -1;
-		////}
-		//float retAngle = atan2(XMVectorGetZ(modVec), XMVectorGetX(modVec));
-		//transform_.rotate_.y = XMConvertToDegrees(angle);
+		float retAngle = 0.0;
+		retAngle = atan2(XMVectorGetX(move), XMVectorGetZ(move));
+		transform_.rotate_.y = XMConvertToDegrees(retAngle);
 	}
-	XMMATRIX rot = XMMatrixRotationY(angle);
-	XMVECTOR modVec = XMVector3Transform(vFront, rot);
 
-	//Debug::Log(XMVectorGetX(modVec));
-	//Debug::Log(", ");
-	//Debug::Log(XMVectorGetZ(modVec), true);
+	//	//XMMATRIX rot = XMMatrixRotationY(angle);
+	//	//XMVECTOR modVec = XMVector3Transform(vFront, rot);
+	//	////XMVECTOR vdot = XMVector3Dot(vFront, move);
+	//	////assert(XMVectorGetX(vdot) <= 1 && XMVectorGetX(vdot) >= -1);
+	//	////float angle = acos(XMVectorGetX(vdot));
+	//	//Debug::Log(XMVectorGetX(modVec));
+	//	//Debug::Log(", ");
+	//	//Debug::Log(XMVectorGetZ(modVec),true);
+	//	////XMVECTOR vCross = XMVector3Cross(vFront, move);
+	//	////if (XMVectorGetY(vCross) < 0)
+	//	////{
+	//	////	angle *= -1;
+	//	////}
+	//	//float retAngle = atan2(XMVectorGetZ(modVec), XMVectorGetX(modVec));
+	//	//transform_.rotate_.y = XMConvertToDegrees(angle);
+	//}
+	//XMMATRIX rot = XMMatrixRotationY(angle);
+	//XMVECTOR modVec = XMVector3Transform(vFront, rot);
 
-	float retAngle = atan2(XMVectorGetZ(modVec), XMVectorGetX(modVec));
-	transform_.rotate_.y = XMConvertToDegrees(angle);
+	////Debug::Log(XMVectorGetX(modVec));
+	////Debug::Log(", ");
+	////Debug::Log(XMVectorGetZ(modVec), true);
+
+
 
 	//float rotAngle[5]{ 0, -90, 180, 90, 180 };
 	//transform_.rotate_.y = rotAngle[moveDir];
